@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Navigate, useNavigate } from 'react-router-dom'
+import { Link, Navigate, useNavigate } from 'react-router-dom'
 import React from 'react'
 
 function Signup() {
@@ -112,6 +112,11 @@ function Signup() {
                                     <label className='form-label'>Re-enter Password</label>
                                     <input type='password' className='form-control' value={userAuth.rePassword} onChange={onFieldChange} name='repassword'/>
                                 </div>
+
+                                <div className='mb-3'>
+                                    <Link to='/login' className="link-offset-2 link-underline link-underline-opacity-10">Already have an account</Link>
+                                </div>
+
                                 <p className='error-text'>{errors?.rePassword}</p>
                                 <input type="submit" value="Signup" className='btn btn-primary w-100' style={{ backgroundColor: "#009688", border: "1px solid #009688" }} />
 

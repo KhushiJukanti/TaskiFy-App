@@ -41,14 +41,17 @@ function Login() {
                 return res.json()
             }).then((result) => {
                 if (result.success) {
-                    navigate("/dashboard")
+                    localStorage.setItem("loggedInUser",JSON.stringify({email:result.email}))
+                    localStorage.setItem("isLoggedIn",true)
+                    navigate("/")
+                    
                 } else {
                     setIsError(true);
                     setErrMessage(result.message)
                 }
             })
         }else{
-            return
+            return;
         }
 
     }
