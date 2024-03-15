@@ -1,6 +1,7 @@
 const express = require("express");
 const jwt = require('jsonwebtoken')
-const bcrypt = require('bcrypt');
+const mongoose = require("mongoose")
+
 
 
 const AuthModel = require("../models/auth")
@@ -18,7 +19,7 @@ router.post("/signup", async function (req, res) {
     if (isUserExist) {
         return res.send({ message: "User already Exist", success: false })
     }
-    const newUser = new AuthModel({ ...req.body })
+    const newUser = new AuthModel({ ...req.body, active: true })
     const createUser = await newUser.save();
     res.send({ message: "user Signup successfully", success: true });
 })
@@ -38,8 +39,13 @@ router.post("/login", async function (req, res) {
         if (password === isUserExist.password) {
             // token generation line and pass to client
 
-            let token = jwt.sign({ email: isUserExist.email, _id: isUserExist._id }, "mysecretkey")
-            return res.send({ message: "User Login Succefully", success: true, token: token, email: isUserExist.email })
+            if (isUserExist.active === false) {
+                return res.send({ message: "your account has been deactivated", success: false })
+            } else {
+                let token = jwt.sign({ email: isUserExist.email, _id: isUserExist._id }, "testkey")
+                return res.send({ message: "User Login Succefully", success: true, token: token, email: isUserExist.email, userId: isUserExist._id, role: isUserExist.role })
+            }
+
         } else {
             return res.send({ message: "Invalid credentials", success: false })
         }
@@ -62,10 +68,18 @@ router.put("/changepassword", async function (req, res) {
     if (user) {
         user.password = newPassword;
         let updateduser = await user.save();
-        res.send(updateduser )
+        res.send(updateduser)
     } else {
         res.send({ message: "User Not Exist" })
     }
+
+});
+
+
+router.put("/activate_deactivate", async function (req, res) {
+    const { id, active } = req.body
+    const updatedUser = await AuthModel.updateOne({ _id: new mongoose.Types.ObjectId(id) }, { active: active })
+    res.send(updatedUser)
 
 });
 
@@ -76,7 +90,10 @@ router.get("/profile/:email", async function (req, res) {
 })
 
 
-
+router.get("/users", async function (req, res) {
+    let users = await AuthModel.find({})
+    res.send(users)
+})
 
 
 

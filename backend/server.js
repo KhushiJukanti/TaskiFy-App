@@ -4,6 +4,7 @@ const cors = require("cors");
 
 const taskRoutes = require("./routes/task")
 const authRoutes = require("./routes/auth")
+const  userTaskRoutes = require('./routes/userTask')
 
 mongoose.connect("mongodb://localhost:27017/task-app")
 
@@ -32,6 +33,8 @@ function checkPaidorNot(req,res,next){
 app.use("/task",checkPaidorNot,taskRoutes)
 
 app.use("/auth",authRoutes)
+
+app.use("/user/task", userTaskRoutes)
 
 app.get("/", function(req,res){
     res.send("hello world")

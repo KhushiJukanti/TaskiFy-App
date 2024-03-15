@@ -47,7 +47,7 @@ function CreateTask() {
                     setTaskDesc("")
                 }
                 console.log("data saved successfully")
-                // navigate("/task")
+                // navigate("/tasks")
             })
         } else {
             return

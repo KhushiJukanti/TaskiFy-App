@@ -5,6 +5,8 @@ let authShema = new mongoose.Schema({
     email:String,
     password:String,
     repassword:String,
+    role:String,
+    active: Boolean
 })
 
 module.exports = mongoose.model("auth",authShema)

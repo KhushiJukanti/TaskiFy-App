@@ -39,11 +39,16 @@ function Login() {
             // console.log('No Errors')
             fetch("http://localhost:7000/auth/login", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email, password }) }).then((res) => {
                 return res.json()
-            }).then((result) => {
+            }).then(async (result) => {
                 if (result.success) {
-                    localStorage.setItem("loggedInUser",JSON.stringify({email:result.email}))
-                    localStorage.setItem("isLoggedIn",true)
-                    navigate("/")
+                    await localStorage.setItem("loggedInUser",JSON.stringify({email:result.email,userId:result.userId, role:result.role}))
+                    await localStorage.setItem("isLoggedIn",true)
+                    if(result.role === "Admin"){
+                        navigate("/adminTasks");
+                    }else{
+                        navigate("/tasks")
+                    }
+                    
                     
                 } else {
                     setIsError(true);

@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react'
 import React from 'react'
-import "../App.css"
+import "../../App.css"
 
-function TaskList() {
+function AdminTaskList() {
 
     const [tasks, SetTasks] = useState([])
     const [searchKey, setSearchKey] = useState('')
     const [filteredTasks, setFilteredTasks] = useState([])
     const [status, setStatus] = useState(["All", "Inprogress", "completed", "not_started"])
-    const [taskSummary, setTaskSummary] = useState({ TotalCount: 0, InProgressCount: 0, CompletedCount: 0, NotStartedCount: 0, AvailableTaskCount: 0 })
+    const [taskSummary, setTaskSummary] = useState({ TotalCount: 0, InProgressCount: 0, CompletedCount: 0, AvailableTaskCount: 0, AssignedTaskCount:0 })
 
     const getAllTasks = () => {
         fetch("http://localhost:7000/task/all").then((res) => {
@@ -19,7 +19,7 @@ function TaskList() {
         })
     }
 
-    const getAllAvailbale = ()=>{
+    const getAllAvailbale = () => {
         fetch("http://localhost:7000/task/available").then((res) => {
             return res.json();
         }).then((result) => {
@@ -52,13 +52,13 @@ function TaskList() {
         getTaskSummary();
     }, [])
 
-    // const deleteTask = (e, id) => {
-    //     fetch("http://localhost:7000/task/" + id, { method: "DELETE" }).then((res) => {
-    //         return res.text()
-    //     }).then((result) => {
-    //         getAllTasks();
-    //     })
-    // }
+    const deleteTask = (e, id) => {
+        fetch("http://localhost:7000/task/" + id, { method: "DELETE" }).then((res) => {
+            return res.text()
+        }).then((result) => {
+            getAllTasks();
+        })
+    }
 
     const searchTasks = (e) => {
         const searchValue = e.target.value;
@@ -86,14 +86,14 @@ function TaskList() {
         })
     }
 
-    const assignTaskToUser = async (taskId, status)=>{
+    const assignTaskToUser = async (taskId, status) => {
         const user = await localStorage.getItem("loggedInUser") && JSON.parse(localStorage.getItem("loggedInUser"))
         if (status === "Inprogress") {
             status = 'completed'
         } else {
             status = 'Inprogress'
         }
-        fetch("http://localhost:7000/user/task/assignTask", { method: "POST", headers: { 'Content-type': 'Application/Json' }, body: JSON.stringify({ taskId: taskId , userId: user.userId, status: status }) }).then((res) => {
+        fetch("http://localhost:7000/user/task/assignTask", { method: "POST", headers: { 'Content-type': 'Application/Json' }, body: JSON.stringify({ taskId: taskId, userId: user.userId, status: status }) }).then((res) => {
             return res.json()
         }).then((result) => {
             getAllTasks();
@@ -101,7 +101,7 @@ function TaskList() {
     }
 
     const assignTask = async (e, taskId, status) => {
-       assignTaskToUser(taskId, status)
+        assignTaskToUser(taskId, status)
     }
 
     const getTaskByStatus = (status) => {
@@ -123,6 +123,15 @@ function TaskList() {
         <div className='container mt-5'>
 
             <div className='row mt-3'>
+            <div className='col-md-3'>
+                    <div className="card text-center mb-3 card-Shadow" style={{ borderBottom: '5px solid Yellow' }}>
+                        <div className="card-body">
+                            <h5 className="card-title">Total Tasks</h5>
+                            <p className="card-text count-task">{taskSummary.TotalCount}</p>
+
+                        </div>
+                    </div>
+                </div>
                 <div className='col-md-3'>
                     <div className="card text-center mb-3 card-Shadow" style={{ borderBottom: '5px solid Yellow' }}>
                         <div className="card-body">
@@ -132,11 +141,11 @@ function TaskList() {
                         </div>
                     </div>
                 </div>
-                {/* <div className='col-md-3'>
+                <div className='col-md-3'>
                     <div className="card text-center mb-3 card-Shadow" style={{ borderBottom: '5px solid Red' }}>
                         <div className="card-body">
-                            <h5 className="card-title">Not started Tasks</h5>
-                            <p className="card-text count-task">{taskSummary.NotStartedCount}</p>
+                            <h5 className="card-title">Assigned Tasks</h5>
+                            <p className="card-text count-task">{taskSummary.AssignedTaskCount}</p>
 
                         </div>
                     </div>
@@ -158,7 +167,7 @@ function TaskList() {
 
                         </div>
                     </div>
-                </div> */}
+                </div>
             </div>
 
 
@@ -201,7 +210,7 @@ function TaskList() {
                                     <p className="card-text">{task.taskDesc}</p>
                                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                                         <span class="badge bg-success">{task.status}</span>
-                                        {/* <span class="badge bg-danger" onClick={(e) => deleteTask(e, task._id)}>delete</span> */}
+                                        <span class="badge bg-danger" onClick={(e) => deleteTask(e, task._id)}>delete</span>
                                     </div>
                                 </div>
                             </div>
@@ -213,5 +222,5 @@ function TaskList() {
     )
 }
 
-export default TaskList
+export default AdminTaskList
 
