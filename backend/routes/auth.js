@@ -1,12 +1,29 @@
 const express = require("express");
 const jwt = require('jsonwebtoken')
 const mongoose = require("mongoose")
+const path = "path"
+const multer = require('multer')
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, "uploads/")
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.filename)
+    },
+})
+const uploadStorage = multer({ storage: storage })
 
 
 
 const AuthModel = require("../models/auth")
 
 const router = express.Router();
+
+
+// Middleware to serve static files
+// router.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
+
+
 
 router.post("/signup", async function (req, res) {
     // first check is user present with given email
@@ -94,6 +111,34 @@ router.get("/users", async function (req, res) {
     let users = await AuthModel.find({})
     res.send(users)
 })
+
+
+// router.post("/profile/:email", async function(req,res){
+
+//     const fileName = req.files.profile.fileName
+//     const fileData = req.files.profile;
+//     const uploadPath = path.join(__dirname, "../", "uploads")
+//     fileData.mv(uploadPath + "/" + fileName, async function (err){
+//         if(err)
+//             return res.send(err)
+//         console.log(uploadPath +  "/" + fileName);
+//         const updatedUser = await AuthModel.updateOne({email:req.params.email}, {profilepic:fileName})
+//         res.send(updatedUser)
+//     })
+// })
+
+
+router.post("/profile/:email", uploadStorage.single("profilepic"), async function (req, res) {
+    console.log("hello")
+    try {
+        const fileName = req.file.filename; // Get the filename assigned by multer
+        const updatedUser = await AuthModel.findOneAndUpdate({ email: req.params.email }, { profilepic: fileName }, { new: true }); // Find and update the user's profile pic
+        res.send(updatedUser);
+    } catch (error) {
+        console.error("Error updating profile pic:", error);
+        res.status(500).send("Internal server error");
+    }
+});
 
 
 

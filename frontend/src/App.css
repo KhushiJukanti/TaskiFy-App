@@ -1,17 +1,28 @@
-.task-card{
+.task-card {
     min-height: 300px !important;
 }
-.search-bar{
-   width: 100%;
-   height: 40px ;
-   border-radius: 50px;
-   padding: 10px;
+
+.search-bar {
+    width: 100%;
+    height: 40px;
+    border-radius: 50px;
+    padding: 10px;
 }
 
-.card-Shadow{
+.card-Shadow {
     box-shadow: rgba(0, 0, 0, 0.12) 0px 4px 16px;
 }
 
-.count-task{
+.count-task {
     font-size: 35px;
+}
+
+body {
+    background-image: url('https://wallpaperset.com/w/full/2/d/5/462765.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.table-transparent {
+    background-color: transparent !important;
 }

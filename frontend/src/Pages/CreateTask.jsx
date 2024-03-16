@@ -2,6 +2,8 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import "../App.css"
+
 
 function CreateTask() {
 
@@ -68,16 +70,16 @@ function CreateTask() {
 
 
     return (
-        <div className='container'>
+        <div className='container' >
             <h4>Create task page</h4>
 
-            <div className='card' style={{ 'padding': '20px', 'marginTop': '50px', width: '30%' }}>
+            <div className='card' style={{ 'padding': '20px', 'marginTop': '50px', width: '30%', background: 'var(--bs-primary-bg-subtle)' }}>
                 <div className='body'>
 
                     <form onSubmit={saveTask}>
                         <div className='form-group' style={{ padding: "20px" }}>
                             <label>Name: </label><br />
-                            <input className='form-controle'  onChange={onTaskNameChange} /><br />
+                            <input className='form-controle' onChange={onTaskNameChange} /><br />
                         </div>
                         <p className='error-text'>{errors?.taskName}</p>
 

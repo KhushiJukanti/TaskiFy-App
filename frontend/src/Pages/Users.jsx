@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+// import "../App.css"
 
 function Users() {
 
@@ -30,7 +31,7 @@ function Users() {
     return (
         <div className='container'>
             <div className='row mt-5'>
-                <table className="table table-light">
+                <table className="table">
                     <thead>
                         <tr>
                             <th scope="col">Full Name</th>
